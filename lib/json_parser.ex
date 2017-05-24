@@ -1,18 +1,14 @@
 defmodule JsonParser do
-  @moduledoc """
-  Documentation for JsonParser.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> JsonParser.hello
-      :world
-
-  """
-  def hello do
-    :world
+  def parse(str) do
+    with {:ok, tokens, _} <- :json_lexer.string(to_char_list(str)),
+         {:ok, result} <- :json_parser.parse(tokens)
+    do
+      result
+    else
+      {:error, reason, _} ->
+        reason
+      {:error, {_, :json_parser, reason}} ->
+        to_string(reason)
+    end
   end
 end
